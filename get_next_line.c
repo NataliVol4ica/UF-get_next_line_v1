@@ -58,6 +58,7 @@ int			get_next_line(const int fd, char **line)
 	int			new_str_size;
 	t_list		*readlist;
 
+	new_str_size = 0;
 	if (BUFF_SIZE <= 0 || fd < 0 || line == NULL || read(fd, buf, 0) < 0)
 		return (-1);
 	//printf("Ostatok 2 \"%s\"\n", ostatok);
@@ -70,6 +71,7 @@ int			get_next_line(const int fd, char **line)
 		ostatok = temp[0] == '\0' ? NULL : ft_strdup(temp);
 		free(temp);
 		//printf("Res ostatok : \"%s\"\n", ostatok);
+		//printf("Returning 1 after nonempty ostatok\n");
 		return (1);
 	}
 	readlist = ft_lstnew(ostatok, ft_strlen(ostatok) + 1);
@@ -87,12 +89,15 @@ int			get_next_line(const int fd, char **line)
 	ft_lstdel(&readlist, NULL);
 	if (ostatok)
 		free(ostatok);
+	//printf("Ret = %d NSS = %d\n", ret, new_str_size);
+	//printf("Str = %s\n", *line);
 	if (ret == 0 && (*line)[0] == '\0')
 	{
 		//printf("Ostatok 1 \"%s\"\n", ostatok);
 		return (0);
 	}
-	ostatok = new_str_size == ret ? NULL : ft_strdup(&buf[new_str_size + 1]);
+	ostatok = (new_str_size == ret || ret == 0)? NULL : ft_strdup(&buf[new_str_size + 1]);
+	//printf("Returning 1 after successfull ostatok\n");
 	//printf("Ostatok 1 \"%s\"\n", ostatok);
 	return (1);
 }
