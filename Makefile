@@ -12,17 +12,26 @@
 
 NAME = test_gnl
 
+TESTNAMES = test0 \
+			test1 \
+			test2
+RUN = sh run.sh
+TESTCOMMANDS = $(patsubst %, $(RUN) % ;, $(TESTNAMES))
+TOWRITE = $(patsubst %, > %_c;, $(TESTNAMES))
 RED = '\033[0;31m'
 NC = '\033[0m' # No Color
 
 all: $(NAME)
 
-$(NAME):
+$(NAME): get_next_line.o main.o
 	make -C libft/ fclean && make -C libft/
-	clang -Wall -Wextra -Werror -I libft/includes -o get_next_line.o -c get_next_line.c
-	clang -Wall -Wextra -Werror -I libft/includes -o main.o -c main.c
 	clang -o test_gnl main.o get_next_line.o -I libft/includes -L libft/ -lft
-	clear
+
+get_next_line.o: get_next_line.c
+	clang -Wall -Wextra -Werror -I libft/includes -o get_next_line.o -c get_next_line.c
+
+main.o: main.c
+	clang -Wall -Wextra -Werror -I libft/includes -o main.o -c main.c
 
 clean:
 	/bin/rm get_next_line.o main.o
@@ -35,3 +44,9 @@ re: fclean all
 norm:
 	clear
 	norminette get_next_line.c get_next_line.h
+
+test: $(NAME)
+	$(TESTCOMMANDS)
+
+tclean:
+	rm -f *_t

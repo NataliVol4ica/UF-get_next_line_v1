@@ -1,0 +1,21 @@
+
+[32mFile name = "test2"
+
+[0mFunc return 1.
+GNL is "length of this line is 26."
+======== 
+Func return 1.
+GNL is "l = 6."
+======== 
+Func return 1.
+GNL is "this one string is having number of symbols equal to 56."
+======== 
+Func return 1.
+GNL is ""
+======== 
+Func return 1.
+GNL is "the previous string was supposed to get a result of 0 and this one is 73."
+======== 
+Func return 0.
+GNL is ""
+======== 
