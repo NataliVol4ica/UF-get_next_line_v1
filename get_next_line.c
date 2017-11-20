@@ -18,7 +18,14 @@
 
 #include <stdio.h>
 
-t_list	*get_list_elem(t_list **l, const int fd)
+static void	do_free(t_list **readlist, char **left, t_list *fd_elem)
+{
+	ft_lstdel(readlist, NULL);
+	ft_memdel((void**)left);
+	ft_memdel(&fd_elem->content);
+}
+
+t_list		*get_list_elem(t_list **l, const int fd)
 {
 	t_list	*t;
 
@@ -26,13 +33,7 @@ t_list	*get_list_elem(t_list **l, const int fd)
 	while (t)
 	{
 		if (t->content_size == (size_t)fd)
-		{
-			/*printf("Try free\n");
-			ft_memdel(&t->content);
-			printf("Free succ\n");*/
 			return (t);
-		
-		}
 		t = t->next;
 	}
 	if ((t = ft_lstnew(NULL, 0)))
@@ -44,44 +45,17 @@ t_list	*get_list_elem(t_list **l, const int fd)
 	return (NULL);
 }
 
-int			get_next_line(const int fd, char **line)
+int			read_the_line(int fd, char **left, char **line, t_list *fd_elem)
 {
-	static t_list	*fd_list = NULL;
-	t_list			*fd_elem;
-	char			*ostatok;
-	//static char		*ostatok = NULL;
-	char			*temp;
-	char			*cont;
 	char			buf[BUFF_SIZE + 1];
 	int				ret;
 	int				new_str_size;
 	t_list			*readlist;
 
-	if (BUFF_SIZE <= 0 || fd < 0 || line == NULL || read(fd, buf, 0) < 0)
-		return (-1);
 	new_str_size = 0;
-	fd_elem = get_list_elem(&fd_list, fd);
-	/*printf("Try free\n");
-	ft_memdel(&fd_elem->content);
-	printf("Free succ\n");*/
-	ostatok = ft_strdup((char*)fd_elem->content);
-	//printf("Ostatok at the beginning = \"%s\"\n             In list it is \"%s\"\n", ostatok, (char*)fd_elem->content);
-	if (ostatok && (cont = ft_memchr(ostatok, '\n', ft_strlen(ostatok))))
-	{
-		temp = ft_strdupab(ostatok, ft_strlen(ostatok) - ft_strlen(cont) + 1, ft_strlen(ostatok) - 1);
-		*line = ft_strdupab(ostatok, 0, ft_strlen(ostatok) - ft_strlen(cont) - 1);
-		free(ostatok);
-		//printf("Second half : \"%s\"\n", temp);
-		ft_memdel(&fd_elem->content);
-		fd_elem->content = temp[0] == '\0' ? NULL : (void*)ft_strdup(temp);
-		free(temp);
-		//printf("Res ostatok : \"%s\"\n", ostatok);
-		//printf("Returning 1 after nonempty ostatok\n");
-		//printf("Ostatok in the end = \"%s\"\n       In list it is \"%s\"\n", ostatok, (char*)fd_elem->content);
-		return (1);
-	}
-	readlist = ft_lstnew(ostatok, ft_strlen(ostatok) + 1);
-	//printf("Ostatok 3 \"%s\"\n", (char*)readlist->content);
+	if (read(fd, buf, 0) < 0)
+		return (-1);
+	readlist = ft_lstnew(*left, ft_strlen(*left) + 1);
 	while ((ret = read(fd, buf, BUFF_SIZE)))
 	{
 		buf[ret] = '\0';
@@ -92,15 +66,37 @@ int			get_next_line(const int fd, char **line)
 			break ;
 	}
 	*line = ft_list_to_string(readlist);
-	ft_lstdel(&readlist, NULL);
-	if (ostatok)
-		free(ostatok);
+	do_free(&readlist, left, fd_elem);
 	if (ret == 0 && (*line)[0] == '\0')
 		return (0);
-	//printf("Ostatok in list before free \"%s\"\n", (char*)fd_elem->content);
-	ft_memdel(&fd_elem->content);
-	//printf("Free succ\n");
-	fd_elem->content = (new_str_size == ret || ret == 0)? NULL : (void*)ft_strdup(&buf[new_str_size + 1]);
-	//printf("Ostatok in the end \"%s\"\n", (char*)fd_elem->content);
+	fd_elem->content = (new_str_size == ret || ret == 0) ? NULL :
+		(void*)ft_strdup(&buf[new_str_size + 1]);
 	return (1);
+}
+
+int			get_next_line(const int fd, char **line)
+{
+	static t_list	*fd_list = NULL;
+	t_list			*fd_elem;
+	char			*left;
+	char			*temp;
+	char			*cont;
+
+	if (BUFF_SIZE <= 0 || fd < 0 || line == NULL)
+		return (-1);
+	fd_elem = get_list_elem(&fd_list, fd);
+	left = ft_strdup((char*)fd_elem->content);
+	if (left && (cont = ft_memchr(left, '\n', ft_strlen(left))))
+	{
+		temp = ft_strdupab(left, ft_strlen(left) - ft_strlen(cont) + 1,
+			ft_strlen(left) - 1);
+		*line = ft_strdupab(left, 0,
+			ft_strlen(left) - ft_strlen(cont) - 1);
+		free(left);
+		ft_memdel(&fd_elem->content);
+		fd_elem->content = temp[0] == '\0' ? NULL : (void*)ft_strdup(temp);
+		free(temp);
+		return (1);
+	}
+	return (read_the_line(fd, &left, line, fd_elem));
 }

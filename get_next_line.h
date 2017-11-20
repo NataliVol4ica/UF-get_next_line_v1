@@ -15,12 +15,6 @@
 
 # define BUFF_SIZE 32
 
-typedef struct	s_fd
-{
-	int		fd;
-	char	*ostatok;
-}				t_fd;
-
 int		get_next_line(const int fd, char **line);
 
 #endif
