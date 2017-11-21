@@ -12,13 +12,46 @@
 
 NAME = test_gnl
 
-TESTNAMES = test0 \
-			test1 \
-			test2
 RUN = sh run.sh
-TESTCOMMANDS = $(patsubst %, $(RUN) % ;, $(TESTNAMES))
-TOWRITE = $(patsubst %, > %_c;, $(TESTNAMES))
+TESTF = ./tests
+TEST8 =		8_test3 \
+			8_test4 \
+			8_test5
+TEST8COMMANDS = $(patsubst %, $(RUN) $(TESTF)/00.basic_tests/% ;, $(TEST8))
+TEST16 =	16_test0 \
+			16_test1 \
+			16_test2 
+TEST16COMMANDS = $(patsubst %, $(RUN) $(TESTF)/01.middle_tests/% ;, $(TEST16))
+TEST4 =		4_test0 \
+			4_test1 \
+			4_test2 \
+			4_test6 \
+			8_test7 \
+			16_test8 \
+			empty0 \
+			empty1
+TEST4COMMANDS = $(patsubst %, $(RUN) $(TESTF)/02.advanced_tests/% ;, $(TEST4))
+TESTERROR =	#e_test0
+TESTERRORCOMMANDS = $(patsubst $(TESTF)/e_tests/%, $(RUN) % ;, $(TESTERROR))
+TESTBONUS =	#b_test0
+TESTBONUSCOMMANDS = $(patsubst $(TESTF)/b_tests/%, $(RUN) % ;, $(TESTBONUS))
+
+RUNANS = sh runans.sh
+RUNANS8COMMANDS = $(patsubst %, $(RUNANS) $(TESTF)/00.basic_tests/% ;, $(TEST8))
+RUNANS16COMMANDS = $(patsubst %, $(RUNANS) $(TESTF)/01.middle_tests/% ;, $(TEST16))
+RUNANS4COMMANDS = $(patsubst %, $(RUNANS) $(TESTF)/02.advanced_tests/% ;, $(TEST4))
+RUNANSERRORCOMMANDS = $(patsubst %, $(RUNANS) $(TESTF)/e_tests/% ;, $(TESTERROR))
+RUNANSBONUSCOMMANDS = $(patsubst %, $(RUNANS) $(TESTF)/b_tests/% ;, $(TESTBONUS))
+
 RED = '\033[0;31m'
+GREEN = '\033[0;32m'
+BLUE = '\033[0;34m'
+PURPLE = '\033[0;35m'
+CYAN = '\033[0;36m'
+YELLOW = '\033[1;33m'
+LBLUE = '\033[1;34m'
+PINK = '\033[1;35m'
+WHITE = '\033[1;37m'
 NC = '\033[0m' # No Color
 
 all: $(NAME)
@@ -45,8 +78,44 @@ norm:
 	clear
 	norminette get_next_line.c get_next_line.h
 
-test: $(NAME)
-	$(TESTCOMMANDS)
+test8: $(NAME)
+	@echo ${CYAN}[Basic tests]${NC}
+	@$(TEST8COMMANDS)
+
+test16: $(NAME)
+	@echo ${CYAN}[Middle tests]${NC}
+	@$(TEST16COMMANDS)	
+
+test4: $(NAME)
+	@echo ${CYAN}[Advanced tests]${NC}
+	@$(TEST4COMMANDS)
+
+testerror: $(NAME)
+	@echo ${CYAN}[Error management]${NC}
+	@$(TESTERRORCOMMANDS)
+
+testbonus: $(NAME)
+	@echo ${CYAN}[Bonus parts]${NC}
+	@$(TESTBONUSCOMMANDS)
+
+testall: $(NAME)
+	@clear
+	@make test8
+	@make test16
+	@make test4
+	@make testerror
+	@make testbonus
+
+test_gans:
+	@$(RUNANS8COMMANDS)
+	@$(RUNANS16COMMANDS)
+	@$(RUNANS4COMMANDS)
+	@$(RUNANSERRORCOMMANDS)
+	@$(RUNANSBONUSCOMMANDS)
+
 
 tclean:
-	rm -f *_t
+	find . -name "*_ans" -delete
+
+aclean:
+	find . -name "*_cor" -delete

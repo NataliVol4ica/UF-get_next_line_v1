@@ -1,9 +1,0 @@
-
-[32mFile name = "test1"
-
-[0mFunc return 1.
-GNL is ""
-======== 
-Func return 0.
-GNL is ""
-======== 

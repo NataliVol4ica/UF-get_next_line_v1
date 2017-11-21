@@ -1,7 +1,10 @@
-./test_gnl $1 > $1_t
-if diff $1 $1_t | wc -l
+./test_gnl $1_inp > $1_ans
+diff $1_cor $1_ans > temp
+num=`wc -l < temp`
+rm temp
+if [ "$num" -eq "0" ]
 then
-	echo "KO :( \n Files are having difference."
+	echo '\033[0;32m'"OK :)"'\033[0m'
 else
-	echo "OK :)"
+	echo "KO :( \n Files are having difference."
 fi

@@ -8,3 +8,4 @@ e
 *.o
 */obj
 *main*
+*_ans
