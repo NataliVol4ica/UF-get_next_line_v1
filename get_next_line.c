@@ -16,8 +16,6 @@
 #include "libft.h"
 #include "get_next_line.h"
 
-#include <stdio.h>
-
 static void		do_free(t_list **readlist, char **left, t_list *fd_elem)
 {
 	ft_lstdel(readlist, NULL);
