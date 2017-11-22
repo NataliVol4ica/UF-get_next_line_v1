@@ -1,1 +1,1 @@
-./test_gnl $1_inp > $1_cor
+./$1 $2_inp > $2_cor

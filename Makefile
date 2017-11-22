@@ -10,38 +10,54 @@
 #                                                                              #
 #******************************************************************************#
 
-NAME = test_gnl
+NAME = test_gnl_file
+NAME2 = test_gnl_std
 
 RUN = sh run.sh
-TESTF = ./tests
-TEST8 =		8_test3 \
+TESTFOLD = ./tests
+T8S =		8_test0 \
+			8_test1 \
+			8_test2
+T8F =		8_test3 \
 			8_test4 \
 			8_test5
-TEST8COMMANDS = $(patsubst %, $(RUN) $(TESTF)/00.basic_tests/% ;, $(TEST8))
-TEST16 =	16_test0 \
+T8C_F = $(patsubst %, $(RUN) $(NAME) $(TESTFOLD)/00.basic_tests/% ;, $(T8F))
+T8C_S = $(patsubst %, $(RUN) $(NAME2) $(TESTFOLD)/00.basic_tests/% ;, $(T8S))
+T16F =		16_test0 \
 			16_test1 \
 			16_test2 
-TEST16COMMANDS = $(patsubst %, $(RUN) $(TESTF)/01.middle_tests/% ;, $(TEST16))
-TEST4 =		4_test0 \
+T16S =		16_test3 \
+			16_test4 \
+			16_test5 
+T16C_F = $(patsubst %, $(RUN) $(NAME) $(TESTFOLD)/01.middle_tests/% ;, $(T16F))
+T16C_S = $(patsubst %, $(RUN) $(NAME2) $(TESTFOLD)/01.middle_tests/% ;, $(T16S))
+T4_F =		4_test0 \
 			4_test1 \
-			4_test2 \
-			4_test6 \
+			4_test2
+T4_S =		4_test3 \
+			4_test4 \
+			4_test5
+T4_E = 		4_test6 \
 			8_test7 \
 			16_test8 \
 			empty0 \
 			empty1
-TEST4COMMANDS = $(patsubst %, $(RUN) $(TESTF)/02.advanced_tests/% ;, $(TEST4))
+T4C_F = $(patsubst %, $(RUN) $(NAME) $(TESTFOLD)/02.advanced_tests/% ;, $(T4F))
+T4C_S = $(patsubst %, $(RUN) $(NAME2) $(TESTFOLD)/02.advanced_tests/% ;, $(T4S))
+T4C_E = $(patsubst %, $(RUN) $(NAME2) $(TESTFOLD)/02.advanced_tests/% ;, $(T4E))
 TESTERROR =	#e_test0
-TESTERRORCOMMANDS = $(patsubst $(TESTF)/e_tests/%, $(RUN) % ;, $(TESTERROR))
+TESTERRORCOMMANDS = $(patsubst $(TESTFOLD)/e_tests/%, $(RUN) % ;, $(TESTERROR))
 TESTBONUS =	#b_test0
-TESTBONUSCOMMANDS = $(patsubst $(TESTF)/b_tests/%, $(RUN) % ;, $(TESTBONUS))
+TESTBONUSCOMMANDS = $(patsubst $(TESTFOLD)/b_tests/%, $(RUN) % ;, $(TESTBONUS))
 
 RUNANS = sh runans.sh
-RUNANS8COMMANDS = $(patsubst %, $(RUNANS) $(TESTF)/00.basic_tests/% ;, $(TEST8))
-RUNANS16COMMANDS = $(patsubst %, $(RUNANS) $(TESTF)/01.middle_tests/% ;, $(TEST16))
-RUNANS4COMMANDS = $(patsubst %, $(RUNANS) $(TESTF)/02.advanced_tests/% ;, $(TEST4))
-RUNANSERRORCOMMANDS = $(patsubst %, $(RUNANS) $(TESTF)/e_tests/% ;, $(TESTERROR))
-RUNANSBONUSCOMMANDS = $(patsubst %, $(RUNANS) $(TESTF)/b_tests/% ;, $(TESTBONUS))
+AT8C_F = $(patsubst %, $(RUNANS) $(NAME) $(TESTFOLD)/00.basic_tests/% ;, $(T8F))
+AT8C_S = $(patsubst %, $(RUNANS) $(NAME2) $(TESTFOLD)/00.basic_tests/% ;, $(T8S))
+AT16C_F = $(patsubst %, $(RUNANS) $(NAME) $(TESTFOLD)/01.middle_tests/% ;, $(T16F))
+AT16C_S = $(patsubst %, $(RUNANS) $(NAME2) $(TESTFOLD)/01.middle_tests/% ;, $(T16S))
+AT4C_F = $(patsubst %, $(RUNANS) $(NAME) $(TESTFOLD)/02.advanced_tests/% ;, $(T4F))
+AT4C_S = $(patsubst %, $(RUNANS) $(NAME2) $(TESTFOLD)/02.advanced_tests/% ;, $(T4S))
+AT4C_E = $(patsubst %, $(RUNANS) $(NAME2) $(TESTFOLD)/02.advanced_tests/% ;, $(T4E))
 
 RED = '\033[0;31m'
 GREEN = '\033[0;32m'
@@ -56,15 +72,19 @@ NC = '\033[0m' # No Color
 
 all: $(NAME)
 
-$(NAME): get_next_line.o main.o
-	make -C libft/ fclean && make -C libft/
-	clang -o test_gnl main.o get_next_line.o -I libft/includes -L libft/ -lft
+$(NAME): get_next_line.o main.o main2.o
+	#make -C libft/ fclean && make -C libft/
+	clang -o $(NAME) main.o get_next_line.o -I libft/includes -L libft/ -lft
+	clang -o $(NAME2) main2.o get_next_line.o -I libft/includes -L libft/ -lft
 
 get_next_line.o: get_next_line.c
 	clang -Wall -Wextra -Werror -I libft/includes -o get_next_line.o -c get_next_line.c
 
 main.o: main.c
 	clang -Wall -Wextra -Werror -I libft/includes -o main.o -c main.c
+
+main2.o: main2.c
+	clang -Wall -Wextra -Werror -I libft/includes -o main2.o -c main2.c
 
 clean:
 	/bin/rm get_next_line.o main.o
@@ -80,23 +100,25 @@ norm:
 
 test8: $(NAME)
 	@echo ${CYAN}[Basic tests]${NC}
-	@$(TEST8COMMANDS)
+	@$(T8C_S)
+	@$(T8C_F)
 
 test16: $(NAME)
 	@echo ${CYAN}[Middle tests]${NC}
-	@$(TEST16COMMANDS)	
+	@$(T16C_F)
+	@$(T16C_S)	
 
 test4: $(NAME)
 	@echo ${CYAN}[Advanced tests]${NC}
-	@$(TEST4COMMANDS)
+	@$(T4C_F)
+	@$(T4C_S)
+	@$(T4C_E)
 
 testerror: $(NAME)
 	@echo ${CYAN}[Error management]${NC}
-	@$(TESTERRORCOMMANDS)
 
 testbonus: $(NAME)
 	@echo ${CYAN}[Bonus parts]${NC}
-	@$(TESTBONUSCOMMANDS)
 
 testall: $(NAME)
 	@clear
@@ -107,12 +129,13 @@ testall: $(NAME)
 	@make testbonus
 
 test_gans:
-	@$(RUNANS8COMMANDS)
-	@$(RUNANS16COMMANDS)
-	@$(RUNANS4COMMANDS)
-	@$(RUNANSERRORCOMMANDS)
-	@$(RUNANSBONUSCOMMANDS)
-
+	@$(AT8C_F)
+	@$(AT8C_S)
+	@$(AT16C_F)
+	@$(AT16C_S)
+	@$(AT4C_F)
+	@$(AT4C_S)
+	@$(AT4C_E)
 
 tclean:
 	find . -name "*_ans" -delete

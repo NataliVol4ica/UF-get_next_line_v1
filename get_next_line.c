@@ -18,14 +18,14 @@
 
 #include <stdio.h>
 
-static void	do_free(t_list **readlist, char **left, t_list *fd_elem)
+static void		do_free(t_list **readlist, char **left, t_list *fd_elem)
 {
 	ft_lstdel(readlist, NULL);
 	ft_memdel((void**)left);
 	ft_memdel(&fd_elem->content);
 }
 
-t_list		*get_list_elem(t_list **l, const int fd)
+static t_list	*get_list_elem(t_list **l, const int fd)
 {
 	t_list	*t;
 
@@ -45,7 +45,7 @@ t_list		*get_list_elem(t_list **l, const int fd)
 	return (NULL);
 }
 
-int			read_the_line(int fd, char **left, char **line, t_list *fd_elem)
+static int		read_the_line(int fd, char **left, char **line, t_list *fd_elem)
 {
 	char			buf[BUFF_SIZE + 1];
 	int				ret;
@@ -74,7 +74,7 @@ int			read_the_line(int fd, char **left, char **line, t_list *fd_elem)
 	return (1);
 }
 
-int			get_next_line(const int fd, char **line)
+int				get_next_line(const int fd, char **line)
 {
 	static t_list	*fd_list = NULL;
 	t_list			*fd_elem;
