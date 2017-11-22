@@ -109,34 +109,33 @@ NC = '\033[0m' # No Color
 # BUILD COMMANDS
 
 all:
-	#@make libclean
 	@make $(NAME)
 	@make $(NAME2)
 	@make $(NAME3)
 
 libclean:
-	@make -C libft/ fclean && make -C libft/
+	make -C libft/ fclean && make -C libft/
 
 $(NAME): get_next_line.o $(MAIN1).o
-	@clang -o $(NAME) $(MAIN1).o get_next_line.o -I libft/includes -L libft/ -lft
+	clang -o $(NAME) $(MAIN1).o get_next_line.o -I libft/includes -L libft/ -lft
 
 $(NAME2): get_next_line.o $(MAIN2).o
-	@clang -o $(NAME2) $(MAIN2).o get_next_line.o -I libft/includes -L libft/ -lft
+	clang -o $(NAME2) $(MAIN2).o get_next_line.o -I libft/includes -L libft/ -lft
 
 $(NAME3): get_next_line.o $(MAIN3).o
-	@clang -o $(NAME3) $(MAIN3).o get_next_line.o -I libft/includes -L libft/ -lft
+	clang -o $(NAME3) $(MAIN3).o get_next_line.o -I libft/includes -L libft/ -lft
 
 get_next_line.o: get_next_line.c
-	@clang -Wall -Wextra -Werror -I libft/includes -o get_next_line.o -c get_next_line.c
+	clang -Wall -Wextra -Werror -I libft/includes -o get_next_line.o -c get_next_line.c
 
 $(MAIN1).o: $(MAIN1).c
-	@clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN1).o -c $(MAIN1).c
+	clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN1).o -c $(MAIN1).c
 
 $(MAIN2).o: $(MAIN2).c
-	@clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN2).o -c $(MAIN2).c
+	clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN2).o -c $(MAIN2).c
 
 $(MAIN3).o: $(MAIN3).c
-	@clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN3).o -c $(MAIN3).c
+	clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN3).o -c $(MAIN3).c
 
 clean:
 	@find $(FOLD)/ -name "*.o" -delete
@@ -176,7 +175,6 @@ test_bonus: $(NAMES)
 	@echo ${CYAN}[Bonus part]${NC}
 
 test_all: $(NAMES)
-	@clear
 	@make test_8
 	@make test_16
 	@make test_4
@@ -198,3 +196,21 @@ tclean: aclean
 
 aclean:
 	@find . -name "*_ans" -delete
+
+eval:
+	@clear
+	@echo ${CYAN}"Files in directory:"${NC}
+	@ls
+	@echo ${CYAN}"Author file:"${NC}
+	@cat -e author
+	@echo ${CYAN}"get_next_line.h:"${NC}
+	@cat get_next_line.h
+	@echo ${CYAN}"[NORM]:"${NC}
+	@norminette get_next_line.c get_next_line.h
+	@norminette ./libft/
+	@echo ${CYAN}"Compiling lib:"${NC}
+	@make libclean
+	@echo ${CYAN}"Compiling GNL:"${NC}
+	@make all
+	@echo ${CYAN}"Testing:"${NC}
+	@make test_all
