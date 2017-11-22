@@ -139,6 +139,7 @@ $(MAIN3).o: $(MAIN3).c
 
 clean:
 	@find $(FOLD)/ -name "*.o" -delete
+	@rm *.o
 
 fclean: clean
 	@rm $(NAMES)
@@ -197,20 +198,29 @@ tclean: aclean
 aclean:
 	@find . -name "*_ans" -delete
 
+checkclean:
+	@make fclean
+	@make -C libft/ fclean
+	@make aclean
+
+# EVAL COMMAND
+
 eval:
 	@clear
-	@echo ${CYAN}"Files in directory:"${NC}
-	@ls
-	@echo ${CYAN}"Author file:"${NC}
+	@tar -cf Makefile.tar Makefile
+	@rm *.tar
+	@echo ${PURPLE}">>>>>>|| Files in directory: ||<<<<<<"${NC}
+	@ls -l
+	@echo ${PURPLE}">>>>>>|| Author file: ||<<<<<<"${NC}
 	@cat -e author
-	@echo ${CYAN}"get_next_line.h:"${NC}
+	@echo ${PURPLE}">>>>>>|| get_next_line.h: ||<<<<<<"${NC}
 	@cat get_next_line.h
-	@echo ${CYAN}"[NORM]:"${NC}
+	@echo ${PURPLE}">>>>>>|| [NORM]: ||<<<<<<"${NC}
 	@norminette get_next_line.c get_next_line.h
 	@norminette ./libft/
-	@echo ${CYAN}"Compiling lib:"${NC}
+	@echo ${PURPLE}">>>>>>|| Compiling lib: ||<<<<<<"${NC}
 	@make libclean
-	@echo ${CYAN}"Compiling GNL:"${NC}
+	@echo ${PURPLE}">>>>>>|| Compiling GNL: ||<<<<<<"${NC}
 	@make all
-	@echo ${CYAN}"Testing:"${NC}
+	@echo ${PURPLE}">>>>>>|| Testing: ||<<<<<<"${NC}
 	@make test_all
