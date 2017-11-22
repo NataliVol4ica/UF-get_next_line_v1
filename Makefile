@@ -17,31 +17,30 @@ NAME4 = test_gnl_DS
 
 NAMES = $(NAME) $(NAME2) $(NAME3)
 
-# BASH SCRIPTS
-
-RUN_S = sh run_s.sh
-RUN_F = sh run_f.sh
-RUN_ERR = sh run_err.sh
-
-RUNANS_S = sh runans_s.sh
-RUNANS_F = sh runans_f.sh
-RUNANS_ERR = sh runans_err.sh
-
 # FOLDERS
 
-TESTFOLD = ./tests
-SHDIR = ./tests
+FOLD = ./resources
+TESTFOLD = $(FOLD)/tests
+SHDIR = $(FOLD)/scripts
 ERRDIR = ./03.error_tests
 
-MAINDIR = $(TESTFOLD)/MAINS
+MAINDIR = $(FOLD)/mains
 
 # MAIN FILES
 
-MAINS =		main \
-			main2 \
-			main3
-MAINF = $(patsubst %, $(MAINDIR)/%.c, $(MAINS))
-MAINO = $(patsubst %, $(MAINDIR)/%.o, $(MAINS))
+MAIN1 = $(MAINDIR)/main
+MAIN2 = $(MAINDIR)/main2
+MAIN3 = $(MAINDIR)/main3
+
+# BASH SCRIPTS
+
+RUN_S = sh $(SHDIR)/run_s.sh
+RUN_F = sh $(SHDIR)/run_f.sh
+RUN_ERR = sh $(SHDIR)/run_err.sh
+
+RUNANS_S = sh $(SHDIR)/runans_s.sh
+RUNANS_F = sh $(SHDIR)/runans_f.sh
+RUNANS_ERR = sh $(SHDIR)/runans_err.sh
 
 # BASIC TESTS
 
@@ -76,6 +75,8 @@ T4_S =		4_test3 \
 T4_E = 		4_test6 \
 			8_test7 \
 			16_test8 \
+			long1 \
+			long2 \
 			empty0 \
 			empty1
 T4C_F = $(patsubst %, $(RUN_F) $(NAME) $(TESTFOLD)/02.advanced_tests/% ;, $(T4_F))
@@ -114,22 +115,31 @@ all:
 	@make $(NAME3)
 
 libclean:
-	make -C libft/ fclean && make -C libft/
+	@make -C libft/ fclean && make -C libft/
 
-$(NAME): get_next_line.o main.o	
-	clang -o $(NAME) main.o get_next_line.o -I libft/includes -L libft/ -lft
+$(NAME): get_next_line.o $(MAIN1).o
+	@clang -o $(NAME) $(MAIN1).o get_next_line.o -I libft/includes -L libft/ -lft
 
-$(NAME2): get_next_line.o main2.o
-	clang -o $(NAME2) main2.o get_next_line.o -I libft/includes -L libft/ -lft
+$(NAME2): get_next_line.o $(MAIN2).o
+	@clang -o $(NAME2) $(MAIN2).o get_next_line.o -I libft/includes -L libft/ -lft
 
-$(NAME3): get_next_line.o main3.o
-	clang -o $(NAME3) main3.o get_next_line.o -I libft/includes -L libft/ -lft
+$(NAME3): get_next_line.o $(MAIN3).o
+	@clang -o $(NAME3) $(MAIN3).o get_next_line.o -I libft/includes -L libft/ -lft
 
-%.o: %.c
-	clang -Wall -Wextra -Werror -I libft/includes -o $@ -c $<
+get_next_line.o: get_next_line.c
+	@clang -Wall -Wextra -Werror -I libft/includes -o get_next_line.o -c get_next_line.c
+
+$(MAIN1).o: $(MAIN1).c
+	@clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN1).o -c $(MAIN1).c
+
+$(MAIN2).o: $(MAIN2).c
+	@clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN2).o -c $(MAIN2).c
+
+$(MAIN3).o: $(MAIN3).c
+	@clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN3).o -c $(MAIN3).c
 
 clean:
-	@rm *.o
+	@find $(FOLD)/ -name "*.o" -delete
 
 fclean: clean
 	@rm $(NAMES)
@@ -137,41 +147,41 @@ fclean: clean
 re: fclean all
 
 norm:
-	clear
-	norminette get_next_line.c get_next_line.h
+	@clear
+	@norminette get_next_line.c get_next_line.h
 
 # TESTING COMMANDS
 
-test8: $(NAMES)
+test_8: $(NAMES)
 	@echo ${CYAN}[Basic tests]${NC}
 	@$(T8C_S)
 	@$(T8C_F)
 
-test16: $(NAMES)
+test_16: $(NAMES)
 	@echo ${CYAN}[Middle tests]${NC}
 	@$(T16C_F)
 	@$(T16C_S)	
 
-test4: $(NAMES)
+test_4: $(NAMES)
 	@echo ${CYAN}[Advanced tests]${NC}
 	@$(T4C_F)
 	@$(T4C_S)
 	@$(T4C_E)
 
-testerror: $(NAMES)
+test_error: $(NAMES)
 	@echo ${CYAN}[Error management]${NC}
 	@$(RUN_ERR) $(NAME3) $(TESTFOLD)/$(ERRDIR)
 
-testbonus: $(NAMES)
-	@echo ${CYAN}[Bonus parts]${NC}
+test_bonus: $(NAMES)
+	@echo ${CYAN}[Bonus part]${NC}
 
-testall: $(NAMES)
+test_all: $(NAMES)
 	@clear
-	@make test8
-	@make test16
-	@make test4
-	@make testerror
-	@make testbonus
+	@make test_8
+	@make test_16
+	@make test_4
+	@make test_error
+	@make test_bonus
 
 test_gans: $(NAMES)
 	@$(AT8C_F)
@@ -184,7 +194,7 @@ test_gans: $(NAMES)
 	@$(RUNANS_ERR) $(NAME3) $(TESTFOLD)/$(ERRDIR)
 
 tclean: aclean
-	find . -name "*_cor" -delete
+	@find . -name "*_cor" -delete
 
 aclean:
-	find . -name "*_ans" -delete
+	@find . -name "*_ans" -delete
