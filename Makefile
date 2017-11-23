@@ -257,7 +257,7 @@ eval:
 	@echo ${PURPLE}">>>>>>|| Author file: ||<<<<<<"${NC}
 	@cat -e author
 	@echo ${PURPLE}">>>>>>|| get_next_line.h: ||<<<<<<"${NC}
-	@cat get_next_line.h
+	@tail -n+13 get_next_line.h 
 	@echo ${PURPLE}">>>>>>|| [NORM] Errors: ||<<<<<<"${RED}
 	@norminette get_next_line.c get_next_line.h > norm
 	@norminette ./libft/ >> norm
