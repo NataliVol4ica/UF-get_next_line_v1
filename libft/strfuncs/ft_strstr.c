@@ -18,6 +18,8 @@ char	*ft_strstr(const char *big, const char *small)
 	int		j;
 
 	f_pos = 0;
+	if (!small || !big)
+		return (NULL);
 	if (small[0] == '\0')
 		return ((char*)big);
 	while (big[f_pos])

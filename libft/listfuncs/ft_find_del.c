@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstcontains_cont.c                              :+:      :+:    :+:   */
+/*   ft_find_del.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nkolosov <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/20 12:54:38 by nkolosov          #+#    #+#             */
-/*   Updated: 2017/11/20 12:54:39 by nkolosov         ###   ########.fr       */
+/*   Created: 2017/11/23 20:04:29 by nkolosov          #+#    #+#             */
+/*   Updated: 2017/11/23 20:04:29 by nkolosov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,31 @@
 #include "list.h"
 #include <string.h>
 
-t_list	*ft_lstcontains_cont(t_list *t, void *cont, size_t sofcont)
+int		ft_find_del(t_list **list, void *data, size_t size)
 {
-	while (t)
-	{
-		if (!(ft_memcmp(t->content, cont, sofcont)))
-			return (t);
-		t = t->next;
-	}
-	return (NULL);
+	t_list	*t;
+	t_list	*f;
+
+	if (!list || !(*list))
+		return (0);
+	t = *list;
+	while (t->next)
+		if (t->next->content_size == size &&
+			!(ft_memcmp(t->next->content, data, size)))
+		{
+			if (t == *list)
+			{
+				f = (*list)->next;
+				ft_lstdelone(&t, NULL);
+				*list = f;
+			}
+			else
+			{
+				f = t->next->next;
+				ft_lstdelone(&(t->next), NULL);
+				t->next = f;
+			}
+			return (1);
+		}
+	return (0);
 }

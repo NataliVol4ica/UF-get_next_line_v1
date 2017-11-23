@@ -14,11 +14,11 @@
 #include "list.h"
 #include <string.h>
 
-t_list	*ft_lstcontains_cont(t_list *t, void *cont, size_t sofcont)
+t_list	*ft_lstcontains(t_list *t, void *data, size_t size)
 {
 	while (t)
 	{
-		if (!(ft_memcmp(t->content, cont, sofcont)))
+		if (t->content_size == size && !(ft_memcmp(t->content, data, size)))
 			return (t);
 		t = t->next;
 	}

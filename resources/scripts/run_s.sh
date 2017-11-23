@@ -7,5 +7,5 @@ if [ "$num" -eq "0" ]
 then
 	echo '\033[0;32m'"OK :)"'\033[0m'
 else
-	echo "KO :( \n Files are having difference."
+	echo '\033[0;31m'"KO :("'\033[0m'
 fi

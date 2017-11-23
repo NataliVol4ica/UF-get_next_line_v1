@@ -50,6 +50,7 @@ int		ft_toupper(int c);
 ** LIST FUNCS
 */
 
+int		ft_find_del(t_list **list, void *data, size_t size);
 char	*ft_list_to_string(t_list *t);
 void	ft_lstadd(t_list **alst, t_list *new);
 t_list	*ft_lstcontains(t_list *t, void *data, size_t size);

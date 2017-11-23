@@ -10,37 +10,51 @@
 #                                                                              #
 #******************************************************************************#
 
-NAME = test_gnl_file
-NAME2 = test_gnl_std
-NAME3 = test_gnl_error
-NAME4 = test_gnl_DS
-
-NAMES = $(NAME) $(NAME2) $(NAME3)
-
 # FOLDERS
 
 FOLD = ./resources
 TESTFOLD = $(FOLD)/tests
 SHDIR = $(FOLD)/scripts
+
+BASICDIR = ./00.basic_tests
+MIDDIR = ./01.middle_tests
+ADVDIR = ./02.advanced_tests
 ERRDIR = ./03.error_tests
+BONUSDIR = ./04.bonus_tests
+
+EXEDIR = $(FOLD)/exe
 
 MAINDIR = $(FOLD)/mains
+
+# NAMES
+
+NAME = $(EXEDIR)/test_gnl_file
+NAME2 = $(EXEDIR)/test_gnl_std
+NAME3 = $(EXEDIR)/test_gnl_error
+NAME4 = $(EXEDIR)/test_gnl_ds
+
+LIBFT = ./libft/libft.a
+
+NAMES = $(NAME) $(NAME2) $(NAME3) $(NAME4)
 
 # MAIN FILES
 
 MAIN1 = $(MAINDIR)/main
 MAIN2 = $(MAINDIR)/main2
 MAIN3 = $(MAINDIR)/main3
+MAIN4 = $(MAINDIR)/main4
 
 # BASH SCRIPTS
 
 RUN_S = sh $(SHDIR)/run_s.sh
 RUN_F = sh $(SHDIR)/run_f.sh
 RUN_ERR = sh $(SHDIR)/run_err.sh
+RUN_BONUS = sh $(SHDIR)/run_bonus.sh
 
 RUNANS_S = sh $(SHDIR)/runans_s.sh
 RUNANS_F = sh $(SHDIR)/runans_f.sh
 RUNANS_ERR = sh $(SHDIR)/runans_err.sh
+RUNANS_BONUS = sh $(SHDIR)/runans_bonus.sh
 
 # BASIC TESTS
 
@@ -50,8 +64,8 @@ T8_S =		8_test0 \
 T8_F =		8_test3 \
 			8_test4 \
 			8_test5
-T8C_F = $(patsubst %, $(RUN_F) $(NAME) $(TESTFOLD)/00.basic_tests/% ;, $(T8_F))
-T8C_S = $(patsubst %, $(RUN_S) $(NAME2) $(TESTFOLD)/00.basic_tests/% ;, $(T8_S))
+T8C_F = $(patsubst %, $(RUN_F) $(NAME) $(TESTFOLD)/$(BASICDIR)/% ;, $(T8_F))
+T8C_S = $(patsubst %, $(RUN_S) $(NAME2) $(TESTFOLD)/$(BASICDIR)/% ;, $(T8_S))
 
 # MIDDLE TESTS
 
@@ -61,8 +75,8 @@ T16_F =		16_test0 \
 T16_S =		16_test3 \
 			16_test4 \
 			16_test5 
-T16C_F = $(patsubst %, $(RUN_F) $(NAME) $(TESTFOLD)/01.middle_tests/% ;, $(T16_F))
-T16C_S = $(patsubst %, $(RUN_S) $(NAME2) $(TESTFOLD)/01.middle_tests/% ;, $(T16_S))
+T16C_F = $(patsubst %, $(RUN_F) $(NAME) $(TESTFOLD)/$(MIDDIR)/% ;, $(T16_F))
+T16C_S = $(patsubst %, $(RUN_S) $(NAME2) $(TESTFOLD)/$(MIDDIR)/% ;, $(T16_S))
 
 # ADVANCED TESTS
 
@@ -79,9 +93,17 @@ T4_E = 		4_test6 \
 			long2 \
 			empty0 \
 			empty1
-T4C_F = $(patsubst %, $(RUN_F) $(NAME) $(TESTFOLD)/02.advanced_tests/% ;, $(T4_F))
-T4C_S = $(patsubst %, $(RUN_S) $(NAME2) $(TESTFOLD)/02.advanced_tests/% ;, $(T4_S))
-T4C_E = $(patsubst %, $(RUN_F) $(NAME) $(TESTFOLD)/02.advanced_tests/% ;, $(T4_E))
+T4C_F = $(patsubst %, $(RUN_F) $(NAME) $(TESTFOLD)/$(ADVDIR)/% ;, $(T4_F))
+T4C_S = $(patsubst %, $(RUN_S) $(NAME2) $(TESTFOLD)/$(ADVDIR)/% ;, $(T4_S))
+T4C_E = $(patsubst %, $(RUN_F) $(NAME) $(TESTFOLD)/$(ADVDIR)/% ;, $(T4_E))
+
+# BONUS TESTS
+
+T_B = 	text1 \
+		text2 \
+		text3
+TB_F = $(TESTFOLD)/$(BONUSDIR)
+TB_C = $(RUN_BONUS) $(NAME4) $(TB_F) $(T_B)
 
 # COMMANDS FOR GETTING CORRECT ANSWERS
 
@@ -89,9 +111,11 @@ AT8C_F = $(patsubst %, $(RUNANS_F) $(NAME) $(TESTFOLD)/00.basic_tests/% ;, $(T8_
 AT8C_S = $(patsubst %, $(RUNANS_S) $(NAME2) $(TESTFOLD)/00.basic_tests/% ;, $(T8_S))
 AT16C_F = $(patsubst %, $(RUNANS_F) $(NAME) $(TESTFOLD)/01.middle_tests/% ;, $(T16_F))
 AT16C_S = $(patsubst %, $(RUNANS_S) $(NAME2) $(TESTFOLD)/01.middle_tests/% ;, $(T16_S))
-AT4C_F = $(patsubst %, $(RUNANS_F) $(NAME) $(TESTFOLD)/02.advanced_tests/% ;, $(T4_F))
-AT4C_S = $(patsubst %, $(RUNANS_S) $(NAME2) $(TESTFOLD)/02.advanced_tests/% ;, $(T4_S))
-AT4C_E = $(patsubst %, $(RUNANS_F) $(NAME) $(TESTFOLD)/02.advanced_tests/% ;, $(T4_E))
+AT4C_F = $(patsubst %, $(RUNANS_F) $(NAME) $(TESTFOLD)/$(ADVDIR)/% ;, $(T4_F))
+AT4C_S = $(patsubst %, $(RUNANS_S) $(NAME2) $(TESTFOLD)/$(ADVDIR)/% ;, $(T4_S))
+AT4C_E = $(patsubst %, $(RUNANS_F) $(NAME) $(TESTFOLD)/$(ADVDIR)/% ;, $(T4_E))
+AT_E = $(RUNANS_ERR) $(NAME3) $(TESTFOLD)/$(ERRDIR)
+AT_B = $(RUNANS_BONUS) $(NAME4) $(TB_F) $(T_B)
 
 # COLORS
 
@@ -112,37 +136,49 @@ all:
 	@make $(NAME)
 	@make $(NAME2)
 	@make $(NAME3)
+	@make $(NAME4)	
 
 libclean:
-	make -C libft/ fclean && make -C libft/
+	make -C libft/ fclean > lib_cleanlog || true
+	make -C libft/ > lib_makelog || true
 
-$(NAME): get_next_line.o $(MAIN1).o
+$(NAME): get_next_line.o $(MAIN1).o get_next_line.h $(LIBFT)
 	clang -o $(NAME) $(MAIN1).o get_next_line.o -I libft/includes -L libft/ -lft
 
-$(NAME2): get_next_line.o $(MAIN2).o
+$(NAME2): get_next_line.o $(MAIN2).o get_next_line.h $(LIBFT)
 	clang -o $(NAME2) $(MAIN2).o get_next_line.o -I libft/includes -L libft/ -lft
 
-$(NAME3): get_next_line.o $(MAIN3).o
+$(NAME3): get_next_line.o $(MAIN3).o get_next_line.h $(LIBFT)
 	clang -o $(NAME3) $(MAIN3).o get_next_line.o -I libft/includes -L libft/ -lft
 
-get_next_line.o: get_next_line.c
+$(NAME4): get_next_line.o $(MAIN4).o get_next_line.h $(LIBFT)
+	clang -o $(NAME4) $(MAIN4).o get_next_line.o -I libft/includes -L libft/ -lft
+
+get_next_line.o: get_next_line.c get_next_line.h $(LIBFT)
 	clang -Wall -Wextra -Werror -I libft/includes -o get_next_line.o -c get_next_line.c
 
-$(MAIN1).o: $(MAIN1).c
+$(MAIN1).o: $(MAIN1).c $(LIBFT)
 	clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN1).o -c $(MAIN1).c
 
-$(MAIN2).o: $(MAIN2).c
+$(MAIN2).o: $(MAIN2).c $(LIBFT)
 	clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN2).o -c $(MAIN2).c
 
-$(MAIN3).o: $(MAIN3).c
+$(MAIN3).o: $(MAIN3).c $(LIBFT)
 	clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN3).o -c $(MAIN3).c
+
+$(MAIN4).o: $(MAIN4).c $(LIBFT)
+	clang -Wall -Wextra -Werror -I libft/includes -o $(MAIN4).o -c $(MAIN4).c
+
+$(LIBFT):
+	@make -C libft/
 
 clean:
 	@find $(FOLD)/ -name "*.o" -delete
+	@touch 1.o
 	@rm *.o
 
 fclean: clean
-	@rm $(NAMES)
+	@rm $(NAMES) || true
 
 re: fclean all
 
@@ -174,6 +210,7 @@ test_error: $(NAMES)
 
 test_bonus: $(NAMES)
 	@echo ${CYAN}[Bonus part]${NC}
+	@$(TB_C)
 
 test_all: $(NAMES)
 	@make test_8
@@ -190,7 +227,8 @@ test_gans: $(NAMES)
 	@$(AT4C_F)
 	@$(AT4C_S)
 	@$(AT4C_E)
-	@$(RUNANS_ERR) $(NAME3) $(TESTFOLD)/$(ERRDIR)
+	@$(AT_E)
+	@$(AT_B)
 
 tclean: aclean
 	@find . -name "*_cor" -delete
@@ -198,10 +236,12 @@ tclean: aclean
 aclean:
 	@find . -name "*_ans" -delete
 
-checkclean:
+evalclean:
 	@make fclean
-	@make -C libft/ fclean
+	@make -C libft/ clean
 	@make aclean
+	@rm lib_cleanlog || true
+	@rm lib_makelog || true
 
 # EVAL COMMAND
 
@@ -210,17 +250,30 @@ eval:
 	@tar -cf Makefile.tar Makefile
 	@rm *.tar
 	@echo ${PURPLE}">>>>>>|| Files in directory: ||<<<<<<"${NC}
-	@ls -l
+	@ls -l > files
+	@./$(EXEDIR)/checker_ls
+	@rm files
 	@echo ${PURPLE}">>>>>>|| Author file: ||<<<<<<"${NC}
 	@cat -e author
 	@echo ${PURPLE}">>>>>>|| get_next_line.h: ||<<<<<<"${NC}
 	@cat get_next_line.h
-	@echo ${PURPLE}">>>>>>|| [NORM]: ||<<<<<<"${NC}
-	@norminette get_next_line.c get_next_line.h
-	@norminette ./libft/
+	@echo ${PURPLE}">>>>>>|| [NORM] Errors: ||<<<<<<"${RED}
+	@norminette get_next_line.c get_next_line.h > norm
+	@norminette ./libft/ >> norm
+	@grep "Error " < norm > norm2 || true
+	@cat norm2
+	@sh $(SHDIR)/norm_ok.sh
+	@rm norm norm2
+	@echo ${PURPLE}">>>>>>|| Static testing: ||<<<<<<"${NC}
+	@./$(EXEDIR)/checker_static
 	@echo ${PURPLE}">>>>>>|| Compiling lib: ||<<<<<<"${NC}
 	@make libclean
 	@echo ${PURPLE}">>>>>>|| Compiling GNL: ||<<<<<<"${NC}
 	@make all
 	@echo ${PURPLE}">>>>>>|| Testing: ||<<<<<<"${NC}
 	@make test_all
+
+cc:
+	gcc checker_static.c -I libft/includes -L libft/ -lft get_next_line.c -o checker_static
+	gcc checker_ls.c -I libft/includes -L libft/ -lft get_next_line.c -o checker_ls
+

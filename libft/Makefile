@@ -56,7 +56,8 @@ STRFUNCS =	ft_strlen \
 			ft_strdupab
 STRFDIR = ./strfuncs
 DSTRFUNCS = $(patsubst %, $(STRFDIR)/%, $(STRFUNCS))
-LISTFUNCS = ft_list_to_string \
+LISTFUNCS = ft_find_del \
+			ft_list_to_string \
 			ft_lstnew \
 			ft_lstcontains \
 			ft_lstdelone \
