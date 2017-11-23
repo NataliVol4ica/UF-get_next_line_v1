@@ -249,6 +249,7 @@ eval:
 	@clear
 	@tar -cf Makefile.tar Makefile
 	@rm *.tar
+	@cat $(FOLD)/header
 	@echo ${PURPLE}">>>>>>|| Files in directory: ||<<<<<<"${NC}
 	@ls -l > files
 	@./$(EXEDIR)/checker_ls
@@ -272,6 +273,10 @@ eval:
 	@make all
 	@echo ${PURPLE}">>>>>>|| Testing: ||<<<<<<"${NC}
 	@make test_all
+
+tar:
+	@make evalclean
+	tar -cf check.tar resources/ Makefile
 
 cc:
 	gcc checker_static.c -I libft/includes -L libft/ -lft get_next_line.c -o checker_static
