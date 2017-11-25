@@ -23,6 +23,7 @@ ERRDIR = ./03.error_tests
 BONUSDIR = ./04.bonus_tests
 
 EXEDIR = $(FOLD)/exe
+LOGDIR = $(FOLD)/logs
 
 MAINDIR = $(FOLD)/mains
 
@@ -139,8 +140,9 @@ all:
 	@make $(NAME4)	
 
 libclean:
-	make -C libft/ fclean > lib_cleanlog || true
-	make -C libft/ > lib_makelog || true
+	@mkdir $(LOGDIR) || true
+	make -C libft/ fclean > $(LOGDIR)/lib_clean
+	make -C libft/ > $(LOGDIR)/lib_make
 
 $(NAME): get_next_line.o $(MAIN1).o get_next_line.h $(LIBFT)
 	clang -o $(NAME) $(MAIN1).o get_next_line.o -I libft/includes -L libft/ -lft
@@ -219,7 +221,7 @@ test_all: $(NAMES)
 	@make test_error
 	@make test_bonus
 
-test_gans: $(NAMES)
+eval_gans: $(NAMES)
 	@$(AT8C_F)
 	@$(AT8C_S)
 	@$(AT16C_F)
@@ -240,8 +242,7 @@ evalclean:
 	@make fclean
 	@make -C libft/ clean
 	@make aclean
-	@rm lib_cleanlog || true
-	@rm lib_makelog || true
+	@rm -rf $(LOGDIR) || true
 
 # EVAL COMMAND
 
@@ -270,7 +271,7 @@ eval:
 	@echo ${PURPLE}">>>>>>|| Compiling lib: ||<<<<<<"${NC}
 	@make libclean
 	@echo ${PURPLE}">>>>>>|| Compiling GNL: ||<<<<<<"${NC}
-	@make all
+	make all > $(LOGDIR)/gnl
 	@echo ${PURPLE}">>>>>>|| Testing: ||<<<<<<"${NC}
 	@make test_all
 
