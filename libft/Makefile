@@ -99,6 +99,8 @@ CHARFUNCS = ft_isdigit \
 			ft_isalpha \
 			ft_isalnum \
 			ft_isascii \
+			ft_isupper \
+			ft_islower \
 			ft_isprint \
 			ft_iswhitespace \
 			ft_toupper \
