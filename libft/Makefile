@@ -154,8 +154,8 @@ $(ODIR):
 	@mkdir -p $(ODIR)/$(CALCFDIR)
 	@mkdir -p $(ODIR)/$(CHARFDIR)
 
-clean:
-	@echo ${RED}[Removing $(NAME) *.o files]${NC}
+#echo ${RED}[Removing $(NAME) *.o files]${NC}
+clean:	
 	@/bin/rm -rf $(ODIR)
 
 fclean: clean
